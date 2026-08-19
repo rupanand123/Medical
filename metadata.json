@@ -1,0 +1,8 @@
+{
+  "name": "Remix: Medication Adherence App",
+  "description": "An interactive medication adherence system with exact-time alarms, elderly-friendly interface, caregiver dashboard with missed-dose escalation pathways, and disease-linked schedule intelligence.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

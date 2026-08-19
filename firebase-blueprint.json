@@ -1,0 +1,163 @@
+{
+  "entities": {
+    "Medication": {
+      "title": "Medication",
+      "description": "Medication record and schedule",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "olderAdultId": { "type": "string" },
+        "name": { "type": "string", "maxLength": 100 },
+        "dosage": { "type": "string", "maxLength": 50 },
+        "frequency": { "type": "string", "maxLength": 50 },
+        "scheduleTime": { "type": "string", "maxLength": 5 },
+        "disease": { "type": "string", "maxLength": 100 },
+        "rxnormCode": { "type": "string", "maxLength": 20 },
+        "drugbankId": { "type": "string", "maxLength": 20 },
+        "instructions": { "type": "string", "maxLength": 500 },
+        "status": { "type": "string", "enum": ["pending", "taken", "missed", "escalated"] },
+        "escalationStep": { "type": "number" },
+        "lastActionTime": { "type": "string" }
+      },
+      "required": ["id", "name", "dosage", "scheduleTime", "disease", "status"]
+    },
+    "NotificationLog": {
+      "title": "NotificationLog",
+      "description": "Audit log for reminders and notifications",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "olderAdultId": { "type": "string" },
+        "timestamp": { "type": "string" },
+        "recipient": { "type": "string" },
+        "channel": { "type": "string" },
+        "message": { "type": "string", "maxLength": 1000 },
+        "type": { "type": "string", "enum": ["info", "warning", "critical"] }
+      },
+      "required": ["id", "timestamp", "recipient", "channel", "message", "type"]
+    },
+    "ChatMessage": {
+      "title": "ChatMessage",
+      "description": "Direct message between caregiver and elderly user",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "olderAdultId": { "type": "string" },
+        "sender": { "type": "string", "enum": ["caregiver", "elderly", "system"] },
+        "senderName": { "type": "string" },
+        "text": { "type": "string", "maxLength": 1000 },
+        "timestamp": { "type": "string" },
+        "readByElderly": { "type": "boolean" },
+        "readByCaregiver": { "type": "boolean" },
+        "isVoice": { "type": "boolean" },
+        "fileUrl": { "type": "string" },
+        "fileName": { "type": "string" }
+      },
+      "required": ["id", "sender", "senderName", "text", "timestamp"]
+    },
+    "CaregiverCode": {
+      "title": "CaregiverCode",
+      "description": "Permanent unique connection code for caregiver",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "caregiverId": { "type": "string" },
+        "code": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "caregiverId", "code"]
+    },
+    "OlderAdultProfile": {
+      "title": "OlderAdultProfile",
+      "description": "Profile of connected older adult",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "avatar": { "type": "string" },
+        "age": { "type": "number" },
+        "status": { "type": "string" },
+        "lastActivity": { "type": "string" },
+        "connectedCaregiverId": { "type": "string" },
+        "connectedCode": { "type": "string" },
+        "conditions": { "type": "string" }
+      },
+      "required": ["id", "name"]
+    },
+    "MedicalFile": {
+      "title": "MedicalFile",
+      "description": "Shared medical report or prescription file",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "olderAdultId": { "type": "string" },
+        "sender": { "type": "string" },
+        "fileName": { "type": "string" },
+        "fileType": { "type": "string" },
+        "fileUrl": { "type": "string" },
+        "uploadedAt": { "type": "string" },
+        "notes": { "type": "string" }
+      },
+      "required": ["id", "olderAdultId", "fileName", "fileType", "fileUrl"]
+    },
+    "MedicineConfirmation": {
+      "title": "MedicineConfirmation",
+      "description": "Confirmation record of taken medicine",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "olderAdultId": { "type": "string" },
+        "medicationId": { "type": "string" },
+        "medicationName": { "type": "string" },
+        "dosage": { "type": "string" },
+        "takenTime": { "type": "string" },
+        "date": { "type": "string" },
+        "status": { "type": "string" }
+      },
+      "required": ["id", "olderAdultId", "medicationName", "takenTime"]
+    },
+    "SimulationState": {
+      "title": "SimulationState",
+      "description": "System simulation time state",
+      "type": "object",
+      "properties": {
+        "simulatedTime": { "type": "string" }
+      },
+      "required": ["simulatedTime"]
+    }
+  },
+  "firestore": {
+    "medications/{medicationId}": {
+      "schema": { "$ref": "#/entities/Medication" },
+      "description": "Stored medications"
+    },
+    "logs/{logId}": {
+      "schema": { "$ref": "#/entities/NotificationLog" },
+      "description": "Notification logs"
+    },
+    "chatMessages/{messageId}": {
+      "schema": { "$ref": "#/entities/ChatMessage" },
+      "description": "Chat messages"
+    },
+    "caregiverCodes/{codeId}": {
+      "schema": { "$ref": "#/entities/CaregiverCode" },
+      "description": "Caregiver connection codes"
+    },
+    "olderAdults/{olderAdultId}": {
+      "schema": { "$ref": "#/entities/OlderAdultProfile" },
+      "description": "Older adult profiles"
+    },
+    "medicalFiles/{fileId}": {
+      "schema": { "$ref": "#/entities/MedicalFile" },
+      "description": "Shared medical files and reports"
+    },
+    "confirmations/{confirmationId}": {
+      "schema": { "$ref": "#/entities/MedicineConfirmation" },
+      "description": "Medicine intake confirmations"
+    },
+    "simulationState/current": {
+      "schema": { "$ref": "#/entities/SimulationState" },
+      "description": "Simulation time document"
+    }
+  }
+}

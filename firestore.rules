@@ -1,0 +1,59 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // Default deny all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Medications collection
+    match /medications/{medicationId} {
+      allow read, write: if true;
+    }
+
+    // Notification logs collection
+    match /logs/{logId} {
+      allow read, write: if true;
+    }
+
+    // Chat messages collection
+    match /chatMessages/{messageId} {
+      allow read, write: if true;
+    }
+
+    // Caregiver connection codes collection
+    match /caregiverCodes/{codeId} {
+      allow read, write: if true;
+    }
+
+    // Older adult profiles collection
+    match /olderAdults/{olderAdultId} {
+      allow read, write: if true;
+    }
+
+    // Medical files collection
+    match /medicalFiles/{fileId} {
+      allow read, write: if true;
+    }
+
+    // Confirmations collection
+    match /confirmations/{confId} {
+      allow read, write: if true;
+    }
+
+    // Simulation state
+    match /simulationState/{docId} {
+      allow read, write: if true;
+    }
+  }
+}
